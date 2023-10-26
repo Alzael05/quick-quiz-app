@@ -1,4 +1,8 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {
+  // distDir: '../../dist/client',
+  reactStrictMode: true,
+  swcMinify: true,
+}
 
 module.exports = nextConfig

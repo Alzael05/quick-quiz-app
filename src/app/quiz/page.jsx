@@ -1,16 +1,19 @@
 // `app/page.js` is the UI for the `/question` URL
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
+import { redirect } from "next/navigation";
 
+import { useState } from "react";
+
+import Logo from "../components/Logo";
 // import Question from "../components/Question";
 // import Choices from "../components/Choices";
 // import PreviousQuestions from "../components/PreviousQuestions";
 // import NextQuestions from "../components/NextQuestions";
 // import SubmitAnswers from "../components/SubmitAnswers";
 
-import questions from "../model/questions";
+const TOTAL_NO_OF_QUESTION = questions.length;
+const NO_OF_QUESTION_PER_PAGE = 3;
 
 const QuestionsPage = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -18,16 +21,12 @@ const QuestionsPage = () => {
   const defaultAnswers = [];
 
   for (let index = 0; index < questions.length; index++) {
-
     const { id } = questions[index];
 
     defaultAnswers[id] = null;
   }
 
   const [selectedAnswers, setSelectedAnswers] = useState(defaultAnswers);
-
-  const TOTAL_NO_OF_QUESTION = questions.length;
-  const NO_OF_QUESTION_PER_PAGE = 3;
 
   const visibleQuestions = questions.slice(
     currentQuestionIndex,
@@ -46,8 +45,6 @@ const QuestionsPage = () => {
   };
 
   const handlePrevious = () => {
-    console.log(selectedAnswers);
-
     if (currentQuestionIndex < NO_OF_QUESTION_PER_PAGE) {
       return;
     }
@@ -56,8 +53,6 @@ const QuestionsPage = () => {
   };
 
   const handleNext = () => {
-    console.log(selectedAnswers);
-
     if (currentQuestionIndex + NO_OF_QUESTION_PER_PAGE > TOTAL_NO_OF_QUESTION) {
       return;
     }
@@ -71,8 +66,36 @@ const QuestionsPage = () => {
     }
 
     console.log("DONE");
-
     console.log(selectedAnswers);
+
+    function checkAnswers(selectedAnswers) {
+      let totalCorrectAnswers = 0;
+      let result = [];
+
+      for (let index = 0; index < questions.length; index++) {
+        let { id, question, correct_answer } = questions[index];
+
+        const selectedAnswer = selectedAnswers[id];
+
+        if (selectedAnswer === correct_answer) {
+          totalCorrectAnswers++;
+        }
+
+        result.push({
+          question,
+          correct_answer,
+          selected_answer: selectedAnswer,
+        });
+      }
+
+      return { score: totalCorrectAnswers, result };
+    }
+
+    const resultAndScore = checkAnswers(selectedAnswers);
+
+    console.log(resultAndScore);
+
+    // redirect("/result");
   };
 
   return (
@@ -83,17 +106,7 @@ const QuestionsPage = () => {
       >
         <div className="pt-5">
           <div className="container ">
-            <div className="row">
-              <div className="d-flex justify-content-center align-items-center">
-                <Image
-                  src="/images/logo.png"
-                  alt="Logo"
-                  width={200}
-                  height={100}
-                  priority
-                />
-              </div>
-            </div>
+            <Logo width={200} height={100} />
 
             <div className="pt-5">
               {/* <div className="d-flex justify-content-center align-items-center"> */}
@@ -108,10 +121,7 @@ const QuestionsPage = () => {
 
                       <div className="card-body">
                         {choices.map((choice, choiceIndex) => (
-                          <div
-                            key={choiceIndex}
-                            className="form-check"
-                          >
+                          <div key={choiceIndex} className="form-check">
                             <input
                               className="form-check-input"
                               type="radio"
@@ -120,7 +130,7 @@ const QuestionsPage = () => {
                               onChange={() => handleChoiceSelect(id, choice)}
                               checked={choice === selectedAnswers[id]}
                             />
-                            < label
+                            <label
                               className="form-check-label"
                               htmlFor={["answer", id, choiceIndex].join("_")} // for selecting using label
                             >
@@ -148,15 +158,15 @@ const QuestionsPage = () => {
                     >
                       Back
                     </button>
-                    /*  <PreviousQuestions handlePrevious={handlePrevious} /> */
                   ) : (
+                    /*  <PreviousQuestions handlePrevious={handlePrevious} /> */
                     ""
                   )}
                 </div>
 
                 <div className="col text-end">
                   {currentQuestionIndex + NO_OF_QUESTION_PER_PAGE >
-                    TOTAL_NO_OF_QUESTION ? (
+                  TOTAL_NO_OF_QUESTION ? (
                     <button
                       type="button"
                       className="btn btn-primary btn-lg"

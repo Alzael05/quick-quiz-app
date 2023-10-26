@@ -5,8 +5,8 @@
 
 import Logo from "./components/Logo";
 
-const handleStart = () => {
-  redirect("/quiz");
+const handleGoBackToHome = () => {
+  redirect("/");
 };
 
 export default function Home() {
@@ -22,15 +22,15 @@ export default function Home() {
           <div className="row">
             <div className="d-flex justify-content-center align-items-center">
               {/* <Link href="/quiz" className="btn btn-primary btn-lg" role="button">
-                Let&apos;s Start
+                Go Back To Home
               </Link> */}
 
               <button
                 type="button"
                 className="btn btn-primary btn-lg"
-                onClick={handleStart}
+                onClick={handleGoBackToHome}
               >
-                Let&apos;s Start
+                Go Back To Home
               </button>
             </div>
           </div>
