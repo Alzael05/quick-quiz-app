@@ -1,6 +1,7 @@
 // `app/page.js` is the UI for the `/question` URL
 "use client";
 
+import Link from "next/link";
 // import { redirect } from "next/navigation";
 
 import { useState, useEffect } from "react";
@@ -51,7 +52,7 @@ const QuestionsPage = () => {
       for (let index = 0; index < questions.length; index++) {
         const { id } = questions[index];
 
-        defaultAnswers[id] = null;
+        defaultAnswers[id] = "null";
       }
 
       setSelectedAnswers(defaultAnswers);
@@ -95,10 +96,9 @@ const QuestionsPage = () => {
       return;
     }
 
-    setData();
-    console.log("DONE");
+    console.log("TEST");
 
-    // redirect("/result");
+    setData({ selected_answers: selectedAnswers });
   };
 
   return (
@@ -170,14 +170,22 @@ const QuestionsPage = () => {
                 <div className="col text-end">
                   {currentQuestionIndex + NO_OF_QUESTION_PER_PAGE >
                   totalNumberOfQuestion ? (
-                    <button
+                    <Link
+                      href="/result"
+                      className="btn btn-primary btn-lg"
+                      role="button"
+                      onClick={handleSubmit}
+                    >
+                      Submit
+                    </Link>
+                  ) : (
+                    /* <button
                       type="button"
                       className="btn btn-primary btn-lg"
                       onClick={handleSubmit}
                     >
                       Submit
-                    </button>
-                  ) : (
+                    </button> */
                     /* <SubmitAnswers handleSubmit={handleSubmit} /> */
                     <button
                       type="button"
