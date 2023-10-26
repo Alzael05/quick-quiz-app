@@ -26,7 +26,7 @@ export const handler = async (event) => {
         headers: {
           "Access-Control-Allow-Origin": "*",
         },
-        body: JSON.stringify({ result }),
+        body: JSON.stringify(result),
       };
   }
 };
