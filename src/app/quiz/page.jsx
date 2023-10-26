@@ -1,9 +1,9 @@
 // `app/page.js` is the UI for the `/question` URL
 "use client";
 
-import { redirect } from "next/navigation";
+// import { redirect } from "next/navigation";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Logo from "../components/Logo";
 // import Question from "../components/Question";
@@ -12,21 +12,51 @@ import Logo from "../components/Logo";
 // import NextQuestions from "../components/NextQuestions";
 // import SubmitAnswers from "../components/SubmitAnswers";
 
-const TOTAL_NO_OF_QUESTION = questions.length;
+import { useAppContext } from "../context/app-context";
+
 const NO_OF_QUESTION_PER_PAGE = 3;
 
 const QuestionsPage = () => {
+  const { data, setData } = useAppContext();
+
+  const [questions, setQuestions] = useState([]);
+  const [totalNumberOfQuestion, setTotalNumberOfQuestion] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedAnswers, setSelectedAnswers] = useState([]);
 
-  const defaultAnswers = [];
+  useEffect(() => {
+    // TODO - DEBUG WHY THIS IS INVOKED TWICE
+    console.log("TEST");
 
-  for (let index = 0; index < questions.length; index++) {
-    const { id } = questions[index];
+    (async () => {
+      const response = await fetch(
+        "https://j24695wfx2.execute-api.ap-southeast-1.amazonaws.com/sbx/questions",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
 
-    defaultAnswers[id] = null;
-  }
+      const responseJSON = await response.json();
 
-  const [selectedAnswers, setSelectedAnswers] = useState(defaultAnswers);
+      const questions = responseJSON.questions;
+
+      setQuestions(questions);
+      setTotalNumberOfQuestion(questions.length);
+
+      let defaultAnswers = [];
+
+      for (let index = 0; index < questions.length; index++) {
+        const { id } = questions[index];
+
+        defaultAnswers[id] = null;
+      }
+
+      setSelectedAnswers(defaultAnswers);
+    })();
+  }, []);
 
   const visibleQuestions = questions.slice(
     currentQuestionIndex,
@@ -53,7 +83,7 @@ const QuestionsPage = () => {
   };
 
   const handleNext = () => {
-    if (currentQuestionIndex + NO_OF_QUESTION_PER_PAGE > TOTAL_NO_OF_QUESTION) {
+    if (currentQuestionIndex + NO_OF_QUESTION_PER_PAGE > totalNumberOfQuestion) {
       return;
     }
 
@@ -61,39 +91,12 @@ const QuestionsPage = () => {
   };
 
   const handleSubmit = () => {
-    if (currentQuestionIndex + NO_OF_QUESTION_PER_PAGE < TOTAL_NO_OF_QUESTION) {
+    if (currentQuestionIndex + NO_OF_QUESTION_PER_PAGE < totalNumberOfQuestion) {
       return;
     }
 
+    setData();
     console.log("DONE");
-    console.log(selectedAnswers);
-
-    function checkAnswers(selectedAnswers) {
-      let totalCorrectAnswers = 0;
-      let result = [];
-
-      for (let index = 0; index < questions.length; index++) {
-        let { id, question, correct_answer } = questions[index];
-
-        const selectedAnswer = selectedAnswers[id];
-
-        if (selectedAnswer === correct_answer) {
-          totalCorrectAnswers++;
-        }
-
-        result.push({
-          question,
-          correct_answer,
-          selected_answer: selectedAnswer,
-        });
-      }
-
-      return { score: totalCorrectAnswers, result };
-    }
-
-    const resultAndScore = checkAnswers(selectedAnswers);
-
-    console.log(resultAndScore);
 
     // redirect("/result");
   };
@@ -166,7 +169,7 @@ const QuestionsPage = () => {
 
                 <div className="col text-end">
                   {currentQuestionIndex + NO_OF_QUESTION_PER_PAGE >
-                  TOTAL_NO_OF_QUESTION ? (
+                  totalNumberOfQuestion ? (
                     <button
                       type="button"
                       className="btn btn-primary btn-lg"

@@ -8,20 +8,38 @@ export const handler = async (event) => {
     case "/questions":
       let questions = getQuestion();
 
-      return { statusCode: 200, body: JSON.stringify({ questions }) };
+      return {
+        statusCode: 200,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({ questions }),
+      };
 
     case "/check":
       let selectedAnswers = JSON.parse(event.body);
 
       let result = checkAnswers(selectedAnswers);
 
-      return { statusCode: 200, body: JSON.stringify({ result }) };
+      return {
+        statusCode: 200,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({ result }),
+      };
   }
 };
 
 function getQuestion() {
-  // TO DO: Update in the future to fetch from DB
-  return questions;
+  // TODO: Update in the future to fetch from DB
+  return questions.map(({ id, question, choices }) => {
+    return {
+      id,
+      question,
+      choices,
+    };
+  });
 }
 
 function checkAnswers(selectedAnswers) {
@@ -31,7 +49,7 @@ function checkAnswers(selectedAnswers) {
   for (let index = 0; index < questions.length; index++) {
     let { id, question, correct_answer } = questions[index];
 
-    const selectedAnswer = selectedAnswers[id];
+    const selectedAnswer = selectedAnswers[id] || "No Answer";
 
     if (selectedAnswer === correct_answer) {
       totalCorrectAnswers++;
