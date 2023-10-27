@@ -1,11 +1,16 @@
-import Image from "next/image";
+// import Image from "next/image";
 
-const Logo = ({ width, height }) => {
+const Logo = ({ maxWidth }) => {
+  console.log(maxWidth);
   return (
-    <div className="row">
-      <div className="d-flex justify-content-center align-items-center">
-        <Image src="/images/logo.png" alt="Logo" width={width} height={height} priority />
-      </div>
+    <div className="logo">
+      <img
+        src="/images/logo.png"
+        // width={100}
+        // height={100}
+        alt="Logo"
+        style={{ maxWidth }}
+      />
     </div>
   );
 };

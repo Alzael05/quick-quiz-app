@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from "react";
 
-// import Link from "next/link";
+import Link from "next/link";
 
 import Logo from "../components/Logo";
 import { useAppContext } from "../context/app-context";
@@ -14,15 +14,12 @@ import B2FirstForSchool from "../components/recommendation/B2FirstForSchool";
 import B1PreliminaryForSchools from "../components/recommendation/B1PreliminaryForSchools";
 import A2KeyForSchools from "../components/recommendation/A2KeyForSchools";
 
-// const handleGoBackToHome = () => {
-//   redirect("/");
-// };
-
 export default function ResultPage() {
   const { data, setData } = useAppContext();
 
   const [result, setResult] = useState([]);
 
+  const [noOfQuestions, setNoOfQuestions] = useState(0);
   const [score, setScore] = useState(0);
   const [lowScore, setLowScore] = useState(0);
   const [averageScore, setAverageScore] = useState(0);
@@ -53,11 +50,16 @@ export default function ResultPage() {
 
       setResult(responseJSON.result);
 
+      setNoOfQuestions(responseJSON.result.length);
       setScore(responseJSON.score);
       setLowScore(responseJSON.score * THIRTY_PERCENT);
       setAverageScore(responseJSON.score * SEVENTY_PERCENT);
     })();
   }, []);
+
+  const handleStartAgain = () => {
+    setData(0);
+  };
 
   return (
     <main>
@@ -65,14 +67,14 @@ export default function ResultPage() {
         className="justify-content-center align-items-center"
         style={{ height: "100vh" }}
       >
-        <div className="pt-5">
+        <div className="pt-2">
           <div className="container ">
-            <Logo width={200} height={100} />
+            <Logo maxWidth={"25%"} />
 
-            <div className="pt-5">
+            <div className="pt-2">
               <div className="row">
                 <h1 className="score text-center text-bold">
-                  Score: {score}/{result.length}
+                  Score: {score}/{noOfQuestions}
                 </h1>
               </div>
             </div>
@@ -80,16 +82,25 @@ export default function ResultPage() {
             <div className="pt-1">
               <div className="row">
                 <div className="col">
-                  <h3 className="score text-center">Recommendation</h3>
+                  <h3 className="score text-center">
+                    Recommended by
+                    <img
+                      className="pb-1 ps-2"
+                      src="https://www.testandtrain.com/img/Logo%20flat%20negative.svg"
+                      alt="Test and Learn"
+                      style={{ width: "150px" }}
+                    />
+                  </h3>
                 </div>
               </div>
               <div className="row">
                 {score <= lowScore ? (
                   <>
-                    <div className="col">
+                    <div className="col-sm-12 col-md-6">
                       <B2First />
                     </div>
-                    <div className="col">
+                    <div className="d-md-none p-1"></div>
+                    <div className="col-sm-12 col-md-6">
                       <C1Advanced />
                     </div>
                   </>
@@ -99,14 +110,30 @@ export default function ResultPage() {
                   </div>
                 ) : (
                   <>
-                    <div className="col">
+                    <div className="col-sm-12 col-md-6">
                       <B1PreliminaryForSchools />
                     </div>
-                    <div className="col">
+                    <div className="d-md-none p-1"></div>
+                    <div className="col-sm-12 col-md-6">
                       <A2KeyForSchools />
                     </div>
                   </>
                 )}
+              </div>
+            </div>
+
+            <div className="pt-3">
+              <div className="row ">
+                <div className="col text-center">
+                  <Link
+                    href="/"
+                    className="btn btn-primary btn-lg"
+                    role="button"
+                    onClick={handleStartAgain}
+                  >
+                    Start Again
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

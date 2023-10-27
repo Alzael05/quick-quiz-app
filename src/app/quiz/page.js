@@ -107,11 +107,11 @@ const QuestionsPage = () => {
         className="justify-content-center align-items-center"
         style={{ height: "100vh" }}
       >
-        <div className="pt-5">
+        <div className="pt-2">
           <div className="container ">
-            <Logo width={200} height={100} />
+              <Logo maxWidth={"25%"} />
 
-            <div className="pt-5">
+            <div className="pt-2">
               {/* <div className="d-flex justify-content-center align-items-center"> */}
               {visibleQuestions.map(({ id, question, choices }, index) => (
                 <div className="row" key={index}>
@@ -150,7 +150,7 @@ const QuestionsPage = () => {
               {/* </div> */}
             </div>
 
-            <div className="pt-5">
+            <div className="pt-2 pt-">
               <div className="row">
                 <div className="col text-start">
                   {currentQuestionIndex >= NO_OF_QUESTION_PER_PAGE ? (

@@ -3,7 +3,7 @@ export default function B1PreliminaryForSchools() {
     <div className="card">
       <div className="card-body">
         <div className="d-flex flex-column justify-center align-center align-md-stretch col">
-          <h2 className="text-center pb-4 pb-md-2">B1 Preliminary for Schools</h2>
+          <h2 className="text-center pb-md-2">B1 Preliminary for Schools</h2>
 
           <div className="d-flex justify-center align-center"></div>
 

@@ -17,7 +17,7 @@ export default function Home() {
         style={{ height: "100vh" }}
       >
         <div className="container">
-          <Logo width={600} height={300} />
+          <Logo maxWidth={"100%"} />
 
           <div className="row">
             <div className="d-flex justify-content-center align-items-center">
