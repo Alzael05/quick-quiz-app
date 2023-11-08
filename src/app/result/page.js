@@ -52,8 +52,8 @@ export default function ResultPage() {
 
       setNoOfQuestions(responseJSON.result.length);
       setScore(responseJSON.score);
-      setLowScore(responseJSON.score * THIRTY_PERCENT);
-      setAverageScore(responseJSON.score * SEVENTY_PERCENT);
+      setLowScore(responseJSON.result.length * THIRTY_PERCENT);
+      setAverageScore(responseJSON.result.length * SEVENTY_PERCENT);
     })();
   }, []);
 
